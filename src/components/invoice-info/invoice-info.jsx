@@ -133,8 +133,9 @@ const InvoiceInfo = () => {
           {products.length >= 2 ? (
             <button
               type="button"
-              className="ml-2 bg-blue-500 text-white px-5 rounded-md cursor-pointer border-2 border-transparent active:border-blue-700"
+              className="print-button ml-2 bg-blue-500 text-white px-5 rounded-md cursor-pointer border-2 border-transparent active:border-blue-700"
               onClick={handlePrintClick}
+              disabled={toName.length === 0}
             >
               Print
             </button>

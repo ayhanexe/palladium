@@ -7,3 +7,9 @@ table.custom-table {
     border-color: inherit;
   }
 }
+
+.print-button:disabled {
+  pointer-events: none;
+  opacity: 0.5;
+  user-select: none;
+}
