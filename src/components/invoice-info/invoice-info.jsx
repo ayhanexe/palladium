@@ -1,15 +1,21 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
+import axios from "axios";
 
 import "./styles.scss";
+import toNumber from "lodash/toNumber";
 
 const InvoiceInfo = () => {
   const [products, setProducts] = useState([0]);
   const [toName, setToName] = useState("");
   const [date, setDate] = useState("");
-  const [invoiceLang, setInvoiceLang] = useState(null);
+  const [invoiceLang, setInvoiceLang] = useState(0);
+  const maxInvoiceProductNumber = 3;
 
-  const increaseProductCount = () =>
-    setProducts([...products, products.at(-1) + 1]);
+  const increaseProductCount = () => {
+    if (products.length < maxInvoiceProductNumber) {
+      setProducts([...products, products.at(-1) + 1]);
+    }
+  };
 
   const handleInvoiceLangChange = (e) => {
     const { value } = e.target;
@@ -27,6 +33,34 @@ const InvoiceInfo = () => {
     const { value } = e.target;
 
     setDate(value);
+  };
+
+  const handlePrintClick = () => {
+    const apiUrl = `${import.meta.env.VITE_API_URL}/Invoice`;
+
+    axios
+      .post(
+        apiUrl,
+        {
+          languageId: toNumber(invoiceLang),
+          to: toName,
+          productCount: products.length,
+        },
+        {
+          auth: {
+            username: import.meta.env.VITE_API_USERNAME,
+            password: import.meta.env.VITE_API_PASSWORD,
+          },
+          headers: {
+            "Content-Type": "application/json",
+          },
+        }
+      )
+      .then((response) => {
+        const pdfUrl = response.data.invoiceUrl;
+        
+        window.open(pdfUrl, "_blank");
+      });
   };
 
   return (
@@ -102,23 +136,29 @@ const InvoiceInfo = () => {
             name=""
             className="border border-black/25 rounded-md p-2 cursor-pointer"
             onChange={handleInvoiceLangChange}
+            value={invoiceLang}
           >
-            <option value="tr">TR</option>
-            <option value="en">EN</option>
-            <option value="az">AZ</option>
+            <option value="1">TR</option>
+            <option value="2">EN</option>
+            <option value="0">AZ</option>
           </select>
-          <button
-            className="ml-2 px-5 rounded-md cursor-pointer border transition-colors duration-300 border-blue-500 active:bg-blue-500 text-blue-700 active:text-white"
-            onClick={increaseProductCount}
-          >
-            Add product
-          </button>
-          <button
-            type="button"
-            className="ml-2 bg-blue-500 text-white px-5 rounded-md cursor-pointer border-2 border-transparent active:border-blue-700"
-          >
-            Print
-          </button>
+          {products.length < maxInvoiceProductNumber ? (
+            <button
+              className="ml-2 px-5 rounded-md cursor-pointer border transition-colors duration-300 border-blue-500 active:bg-blue-500 text-blue-700 active:text-white"
+              onClick={increaseProductCount}
+            >
+              Add product
+            </button>
+          ) : null}
+          {products.length === maxInvoiceProductNumber ? (
+            <button
+              type="button"
+              className="ml-2 bg-blue-500 text-white px-5 rounded-md cursor-pointer border-2 border-transparent active:border-blue-700"
+              onClick={handlePrintClick}
+            >
+              Print
+            </button>
+          ) : null}
         </div>
       </div>
     </div>

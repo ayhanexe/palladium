@@ -36,7 +36,7 @@ const index = () => {
           </div>
         </div>
 
-        <div className="w-full flex justify-between">
+        <div className="w-full flex justify-between items-center">
           <div>
             <div className="flex items-center gap-5">
               <FontAwesomeIcon icon={faPhone} size="2x" />
@@ -47,27 +47,27 @@ const index = () => {
             </div>
           </div>
 
-          <div>
+          <div className="flex flex-col gap-5">
             <div>
               <a href="mailto:info@palladium.gen.tr" className="text-xl">
                 bizimle iletişime geçin
               </a>
             </div>
-            <div>
+            <div className="flex gap-5">
               <a href="#">
-                <FontAwesomeIcon icon={faWhatsapp} />
+                <FontAwesomeIcon icon={faWhatsapp} size="3x" />
               </a>
               <a href="#">
-                <FontAwesomeIcon icon={faLinkedin} />
+                <FontAwesomeIcon icon={faLinkedin} size="3x" />
               </a>
               <a href="#">
-                <FontAwesomeIcon icon={faInstagram} />
+                <FontAwesomeIcon icon={faInstagram} size="3x" />
               </a>
               <a href="#">
-                <FontAwesomeIcon icon={faXTwitter} />
+                <FontAwesomeIcon icon={faXTwitter} size="3x" />
               </a>
               <a href="#">
-                <FontAwesomeIcon icon={faFacebook} />
+                <FontAwesomeIcon icon={faFacebook} size="3x" />
               </a>
             </div>
           </div>
