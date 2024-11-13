@@ -47,10 +47,6 @@ const InvoiceInfo = () => {
           productCount: products.length,
         },
         {
-          auth: {
-            username: import.meta.env.VITE_API_USERNAME,
-            password: import.meta.env.VITE_API_PASSWORD,
-          },
           headers: {
             "Content-Type": "application/json",
           },
@@ -58,7 +54,7 @@ const InvoiceInfo = () => {
       )
       .then((response) => {
         const pdfUrl = response.data.invoiceUrl;
-        
+
         window.open(pdfUrl, "_blank");
       });
   };
