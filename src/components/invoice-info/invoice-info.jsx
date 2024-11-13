@@ -7,7 +7,6 @@ import toNumber from "lodash/toNumber";
 const InvoiceInfo = () => {
   const [products, setProducts] = useState([0]);
   const [toName, setToName] = useState("");
-  const [date, setDate] = useState("");
   const [invoiceLang, setInvoiceLang] = useState(0);
   const maxInvoiceProductNumber = 3;
 
@@ -27,12 +26,6 @@ const InvoiceInfo = () => {
     const { value } = e.target;
 
     setToName(value);
-  };
-
-  const handleDateChange = (e) => {
-    const { value } = e.target;
-
-    setDate(value);
   };
 
   const handlePrintClick = () => {
@@ -73,15 +66,6 @@ const InvoiceInfo = () => {
               className="w-full border border-black/25 rounded-md h-[35px] px-2"
               value={toName}
               onChange={handleToNameChange}
-            />
-          </div>
-          <div className="w-full flex flex-col items-start">
-            <label htmlFor="date">To:</label>
-            <input
-              id="date"
-              type="date"
-              className="w-full border border-black/25 rounded-md h-[35px] px-2"
-              onChange={handleDateChange}
             />
           </div>
         </div>
