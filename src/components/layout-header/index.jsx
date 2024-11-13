@@ -13,11 +13,6 @@ const LayoutHeader = () => {
             alt="company logo"
           />
         </div>
-        <div className="w-full px-2 hidden lg:flex justify-end">
-          <div className="bg-[#FBC332] p-[5px] cursor-pointer">TR</div>
-          <div className="p-[5px] cursor-pointer">EN</div>
-          <div className="p-[5px] cursor-pointer">AZ</div>
-        </div>
         <div className="w-full flex flex-col items-center mx-auto">
           <div className="flex lg:hidden items-center justify-end w-full h-full">
             <button className="text-[1.25rem] rounded border border-[rgba(0,0,0,.1)] text-[rgba(0,0,0,.55)] py-[.25rem] px-[.75rem]">
