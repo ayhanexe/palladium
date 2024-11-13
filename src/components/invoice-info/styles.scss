@@ -1,0 +1,9 @@
+table.custom-table {
+  width: 100%;
+}
+
+table.custom-table {
+  * {
+    border-color: inherit;
+  }
+}
