@@ -1,18 +1,70 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import axios from "axios";
 
 import "./styles.scss";
 import toNumber from "lodash/toNumber";
 
 const InvoiceInfo = () => {
-  const [products, setProducts] = useState([0]);
+  const [products, setProducts] = useState([
+    {
+      id: 0,
+      name: "Template Good",
+      quantity: 10000,
+      price: 100,
+    },
+  ]);
   const [toName, setToName] = useState("");
+  const [discountPercent, setDiscountPercent] = useState(20);
   const [invoiceLang, setInvoiceLang] = useState(0);
   const maxInvoiceProductNumber = 3;
 
+  const handleTitleChange = (e, id) => {
+    const { value } = e.target;
+
+    setProducts([
+      ...products.filter((product) => product.id !== id),
+      {
+        ...products.find((product) => product.id === id),
+        name: value,
+      },
+    ]);
+  };
+
+  const handleQuantityChange = (e, id) => {
+    const { value } = e.target;
+
+    setProducts([
+      ...products.filter((product) => product.id !== id),
+      {
+        ...products.find((product) => product.id === id),
+        quantity: value,
+      },
+    ]);
+  };
+
+  const handleUnitPriceChange = (e, id) => {
+    const { value } = e.target;
+
+    setProducts([
+      ...products.filter((product) => product.id !== id),
+      {
+        ...products.find((product) => product.id === id),
+        price: value,
+      },
+    ]);
+  };
+
   const increaseProductCount = () => {
     if (products.length < maxInvoiceProductNumber) {
-      setProducts([...products, products.at(-1) + 1]);
+      setProducts([
+        ...products,
+        {
+          id: products.at(-1).id + 1,
+          name: "Template Good",
+          quantity: 10000,
+          price: 100,
+        },
+      ]);
     }
   };
 
@@ -28,6 +80,12 @@ const InvoiceInfo = () => {
     setToName(value);
   };
 
+  const handleDiscountPercentChange = (e) => {
+    const { value } = e.target;
+
+    setDiscountPercent(value);
+  };
+
   const handlePrintClick = () => {
     const apiUrl = `${import.meta.env.VITE_API_URL}/Invoice`;
 
@@ -38,6 +96,14 @@ const InvoiceInfo = () => {
           languageId: toNumber(invoiceLang),
           to: toName,
           productCount: products.length,
+          vatPercent: toNumber(discountPercent),
+          products: [
+            ...products.map((product) => ({
+              name: product.name,
+              quantity: toNumber(product.quantity),
+              perPrice: toNumber(product.price),
+            })),
+          ],
         },
         {
           headers: {
@@ -68,6 +134,16 @@ const InvoiceInfo = () => {
               onChange={handleToNameChange}
             />
           </div>
+          <div className="w-full flex flex-col items-start">
+            <label htmlFor="discount-percent">Discount:</label>
+            <input
+              id="discount-percent"
+              type="number"
+              className="w-full border border-black/25 rounded-md h-[35px] px-2"
+              value={discountPercent}
+              onChange={handleDiscountPercentChange}
+            />
+          </div>
         </div>
 
         <div className="w-full border border-black/25 rounded-lg mt-8 ">
@@ -81,24 +157,45 @@ const InvoiceInfo = () => {
               </tr>
             </thead>
             <tbody>
-              {products.map((_, index) => (
-                <tr className="border-b" key={index}>
-                  <td className="p-2 border-r">
-                    <p>
-                      <b>Template Good</b>
-                    </p>
-                    <p>Description</p>
-                  </td>
-                  <td className="p-2 border-r">10 000pcs</td>
-                  <td className="p-2 border-r">100,00</td>
-                  <td className="p-2">00 00 000,00</td>
-                </tr>
-              ))}
+              {products
+                .sort((a, b) => a.id - b.id)
+                .map((data) => (
+                  <tr className="border-b" key={data.id}>
+                    <td className="p-2 border-r">
+                      <input
+                        type="text"
+                        className="border w-full p-1 rounded"
+                        placeholder="Title"
+                        value={data.name}
+                        onChange={(e) => handleTitleChange(e, data.id)}
+                      />
+                    </td>
+                    <td className="p-2 border-r">
+                      <input
+                        type="text"
+                        className="border w-full p-1 rounded"
+                        placeholder="Quantity"
+                        value={data.quantity}
+                        onChange={(e) => handleQuantityChange(e, data.id)}
+                      />
+                    </td>
+                    <td className="p-2 border-r">
+                      <input
+                        type="text"
+                        className="border w-full p-1 rounded"
+                        placeholder="Unit price"
+                        value={data.price}
+                        onChange={(e) => handleUnitPriceChange(e, data.id)}
+                      />
+                    </td>
+                    <td className="p-2"></td>
+                  </tr>
+                ))}
             </tbody>
             <tfoot>
               <tr className="border-b">
                 <th colSpan={3} className="text-right p-2 border-r">
-                  VAT 20%
+                  VAT {discountPercent}%
                 </th>
                 <th className="text-start p-3">0 000 000</th>
               </tr>
