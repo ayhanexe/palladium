@@ -3,6 +3,7 @@ import axios from "axios";
 
 import "./styles.scss";
 import toNumber from "lodash/toNumber";
+import { isNumber } from "lodash";
 
 const InvoiceInfo = () => {
   const [products, setProducts] = useState([
@@ -33,25 +34,33 @@ const InvoiceInfo = () => {
   const handleQuantityChange = (e, id) => {
     const { value } = e.target;
 
-    setProducts([
-      ...products.filter((product) => product.id !== id),
-      {
-        ...products.find((product) => product.id === id),
-        quantity: value,
-      },
-    ]);
+    const convertedValue = toNumber(value);
+
+    if (isFinite(convertedValue)) {
+      setProducts([
+        ...products.filter((product) => product.id !== id),
+        {
+          ...products.find((product) => product.id === id),
+          quantity: convertedValue,
+        },
+      ]);
+    }
   };
 
   const handleUnitPriceChange = (e, id) => {
     const { value } = e.target;
 
-    setProducts([
-      ...products.filter((product) => product.id !== id),
-      {
-        ...products.find((product) => product.id === id),
-        price: value,
-      },
-    ]);
+    const convertedValue = toNumber(value);
+
+    if (isFinite(convertedValue)) {
+      setProducts([
+        ...products.filter((product) => product.id !== id),
+        {
+          ...products.find((product) => product.id === id),
+          price: convertedValue,
+        },
+      ]);
+    }
   };
 
   const increaseProductCount = () => {
@@ -83,7 +92,11 @@ const InvoiceInfo = () => {
   const handleDiscountPercentChange = (e) => {
     const { value } = e.target;
 
-    setDiscountPercent(value);
+    const convertedValue = toNumber(value);
+
+    if (isFinite(convertedValue)) {
+      setDiscountPercent(convertedValue);
+    }
   };
 
   const handlePrintClick = () => {
@@ -135,12 +148,12 @@ const InvoiceInfo = () => {
             />
           </div>
           <div className="w-full flex flex-col items-start">
-            <label htmlFor="discount-percent">Discount:</label>
+            <label htmlFor="discount-percent">VAT:</label>
             <input
               id="discount-percent"
               type="number"
               className="w-full border border-black/25 rounded-md h-[35px] px-2"
-              value={discountPercent}
+              value={`${discountPercent}`}
               onChange={handleDiscountPercentChange}
             />
           </div>
@@ -175,7 +188,7 @@ const InvoiceInfo = () => {
                         type="text"
                         className="border w-full p-1 rounded"
                         placeholder="Quantity"
-                        value={data.quantity}
+                        value={`${data.quantity}`}
                         onChange={(e) => handleQuantityChange(e, data.id)}
                       />
                     </td>
@@ -184,7 +197,7 @@ const InvoiceInfo = () => {
                         type="text"
                         className="border w-full p-1 rounded"
                         placeholder="Unit price"
-                        value={data.price}
+                        value={`${data.price}`}
                         onChange={(e) => handleUnitPriceChange(e, data.id)}
                       />
                     </td>
